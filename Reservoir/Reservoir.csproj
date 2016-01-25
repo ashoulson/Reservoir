@@ -38,7 +38,6 @@
     <Compile Include="Pool\Pool.cs" />
     <Compile Include="LinkedList\NodeList.cs" />
     <Compile Include="Pool\IPoolable.cs" />
-    <Compile Include="Example.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -66,7 +66,7 @@ namespace Reservoir
     internal void Deallocate(T value)
     {
       if ((value.Pool != this) || value.IsPooled)
-        throw new InvalidOperationException();
+        throw new AccessViolationException();
 
       value.Reset();
       value.IsPooled = true;

@@ -24,18 +24,20 @@ using System.Collections.Generic;
 
 namespace Reservoir
 {
-  /// <summary>
-  /// You can use this interface directly for classes that can't be inherited
-  /// from PooledObject, like Unity MonoBehaviours. In general though, it's 
-  /// easier and safer to just use the PooledObject class as a base.
-  /// </summary>
   public interface IPoolable<T> : INode<T>
     where T : class, IPoolable<T>, new()
   {
     Pool<T> Pool { get; set; }
     bool IsPooled { get; set; }
 
+    /// <summary>
+    /// Called when the object is removed from the pool (allocated).
+    /// </summary>
     void Initialize();
+
+    /// <summary>
+    /// Called when the object is returned to the pool (freed).
+    /// </summary>
     void Reset();
   }
 }
