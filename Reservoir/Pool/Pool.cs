@@ -37,6 +37,22 @@ namespace Reservoir
         value.List.Remove(value);
       value.Pool.Deallocate(value);
     }
+
+    public static void FreeAll<T>(NodeList<T> list)
+      where T : class, IPoolable<T>, new()
+    {
+      // We can't do a list append here because the elements in
+      // the given list may be from different pools
+      while(list.Count > 0)
+        Pool.Free(list.RemoveFirst());
+    }
+
+    public static bool IsPooled<T>(T value)
+      where T : class, IPoolable<T>, new()
+    {
+      NodeList<T> list = value.List;
+      return (list != null) && list.isPoolList;
+    }
   }
 
   public class Pool<T>
@@ -47,6 +63,7 @@ namespace Reservoir
     public Pool()
     {
       this.freeList = new NodeList<T>();
+      this.freeList.isPoolList = true;
     }
 
     public T Allocate()
@@ -58,18 +75,16 @@ namespace Reservoir
         value = this.freeList.RemoveFirst();
 
       value.Pool = this;
-      value.IsPooled = false;
       value.Initialize();
       return value;
     }
 
     internal void Deallocate(T value)
     {
-      if ((value.Pool != this) || value.IsPooled)
+      if ((value.Pool != this) || Pool.IsPooled(value))
         throw new AccessViolationException();
 
       value.Reset();
-      value.IsPooled = true;
       this.freeList.Add(value);
     }
   }

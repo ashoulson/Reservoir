@@ -28,7 +28,6 @@ namespace Reservoir
     where T : class, IPoolable<T>, new()
   {
     Pool<T> Pool { get; set; }
-    bool IsPooled { get; set; }
 
     /// <summary>
     /// Called when the object is removed from the pool (allocated).

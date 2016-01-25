@@ -68,6 +68,9 @@ namespace Reservoir
       }
     }
 
+    // Special identifier for debugging and checking for invalid nodes
+    internal bool isPoolList;
+
     internal T first;
     internal T last;
 
@@ -78,6 +81,8 @@ namespace Reservoir
 
     public NodeList()
     {
+      this.isPoolList = false;
+
       this.first = null;
       this.last = null;
       this.enumerator = new NodeListEnumerator(this);
@@ -105,6 +110,37 @@ namespace Reservoir
       value.List = this;
 
       this.Count++;
+    }
+
+    /// <summary>
+    /// Appends another list onto this one, clearing out the original list.
+    /// O(n), but marginally cheaper than the naive way.
+    /// </summary>
+    public void Append(NodeList<T> list)
+    {
+      if (this.first == null)
+        this.first = list.first;
+      if (this.last != null)
+        this.last.Next = list.first;
+
+      if (list.first != null)
+        list.first.Previous = this.last;
+      if (list.last != null)
+        this.last = list.last;
+
+      // Reassign the list pointer
+      T node = list.first;
+      while (node != null)
+      {
+        node.List = this;
+        node = node.Next;
+      }
+
+      this.Count += list.Count;
+
+      list.first = null;
+      list.last = null;
+      list.Count = 0;
     }
 
     /// <summary>
