@@ -11,7 +11,6 @@ public class Example : IPoolable<Example>
 {
   #region IPoolable Members
   Pool<Example> IPoolable<Example>.Pool { get; set; }
-  bool IPoolable<Example>.IsPooled { get; set; }
 
   Example INode<Example>.Next { get; set; }
   Example INode<Example>.Previous { get; set; }
