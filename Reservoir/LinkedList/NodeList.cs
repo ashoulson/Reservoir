@@ -36,6 +36,7 @@ namespace Reservoir
   {
     public class NodeListEnumerator : IEnumerator<T>
     {
+      private bool reset;
       private T current;
       private NodeList<T> list;
 
@@ -44,10 +45,11 @@ namespace Reservoir
 
       public bool MoveNext()
       {
-        if (current.Next == null)
-          return false;
-        current = current.Next;
-        return true;
+        // Need to skip the first MoveNext() immediately after resetting
+        if ((current != null) && (reset == false))
+          current = current.Next;
+        reset = false;
+        return current != null;
       }
 
       public void Dispose() { }
@@ -55,12 +57,14 @@ namespace Reservoir
       public void Reset()
       {
         this.current = this.list.first;
+        this.reset = true;
       }
 
       internal NodeListEnumerator(NodeList<T> list)
       {
         this.current = null;
         this.list = list;
+        this.reset = true;
       }
     }
 
