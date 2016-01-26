@@ -72,7 +72,8 @@ namespace Reservoir
       if (this.freeList.Count == 0)
         value = new T();
       else
-        value = this.freeList.RemoveFirst();
+        // Pull last added element, most likely to still be in cache
+        value = this.freeList.RemoveLast();
 
       value.Pool = this;
       value.Initialize();

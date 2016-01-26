@@ -193,6 +193,30 @@ namespace Reservoir
     }
 
     /// <summary>
+    /// Removes and returns the last element. O(1)
+    /// </summary>
+    public T RemoveLast()
+    {
+      if (this.last == null)
+        throw new AccessViolationException();
+
+      T result = this.last;
+      if (result.Previous != null)
+        result.Previous.Next = null;
+      this.last = result.Previous;
+      if (this.first == result)
+        this.first = null;
+
+      result.Next = null;
+      result.Previous = null;
+      result.List = null;
+
+      this.Count--;
+
+      return result;
+    }
+
+    /// <summary>
     /// Returns the first element, keeping it in the list. O(1)
     /// </summary>
     public T PeekFirst()
