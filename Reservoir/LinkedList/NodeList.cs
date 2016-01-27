@@ -96,7 +96,7 @@ namespace Reservoir
     public void Add(T value)
     {
       if (value.List != null)
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Node is already in a list");
 
       if (this.first == null)
         this.first = value;
@@ -149,7 +149,7 @@ namespace Reservoir
     public void Remove(T value)
     {
       if (value.List != this)
-        throw new AccessViolationException();
+        throw new AccessViolationException("Node is not in this list");
 
       if (this.first == value)
         this.first = value.Next;
