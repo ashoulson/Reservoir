@@ -68,8 +68,10 @@ namespace Reservoir
       }
     }
 
+#if DEBUG
     // Special identifier for debugging and checking for invalid nodes
     internal bool isPoolList;
+#endif
 
     internal T first;
     internal T last;
@@ -81,7 +83,9 @@ namespace Reservoir
 
     public NodeList()
     {
+#if DEBUG
       this.isPoolList = false;
+#endif
 
       this.first = null;
       this.last = null;
@@ -95,8 +99,10 @@ namespace Reservoir
     /// </summary>
     public void Add(T value)
     {
+#if DEBUG
       if (value.List != null)
         throw new InvalidOperationException("Node is already in a list");
+#endif
 
       if (this.first == null)
         this.first = value;
@@ -107,7 +113,10 @@ namespace Reservoir
       value.Next = null;
 
       this.last = value;
+
+#if DEBUG
       value.List = this;
+#endif
 
       this.Count++;
     }
@@ -132,7 +141,9 @@ namespace Reservoir
       T node = list.first;
       while (node != null)
       {
+#if DEBUG
         node.List = this;
+#endif
         node = node.Next;
       }
 
@@ -148,8 +159,10 @@ namespace Reservoir
     /// </summary>
     public void Remove(T value)
     {
+#if DEBUG
       if (value.List != this)
         throw new AccessViolationException("Node is not in this list");
+#endif
 
       if (this.first == value)
         this.first = value.Next;
@@ -163,7 +176,10 @@ namespace Reservoir
 
       value.Next = null;
       value.Previous = null;
+
+#if DEBUG
       value.List = null;
+#endif
 
       this.Count--;
     }
@@ -185,7 +201,10 @@ namespace Reservoir
 
       result.Next = null;
       result.Previous = null;
+
+#if DEBUG
       result.List = null;
+#endif
 
       this.Count--;
 
@@ -209,7 +228,10 @@ namespace Reservoir
 
       result.Next = null;
       result.Previous = null;
+
+#if DEBUG
       result.List = null;
+#endif
 
       this.Count--;
 

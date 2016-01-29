@@ -33,37 +33,44 @@ namespace Reservoir
     public static void Free<T>(T value)
       where T : class, IPoolable<T>, new()
     {
+#if DEBUG
       if (value.List != null)
-        value.List.Remove(value);
+        throw new InvalidOperationException("Remove nodes before freeing");
+#endif
       value.Pool.Deallocate(value);
     }
 
     public static void FreeAll<T>(NodeList<T> list)
       where T : class, IPoolable<T>, new()
     {
-      // We can't do a list append here because the elements in
-      // the given list may be from different pools
+
+      // We can't do a list append here because we need to call Reset()
+      // on each element as it enters the pool
       while(list.Count > 0)
-        Pool.Free(list.RemoveFirst());
+        Pool.Free(list.RemoveLast());
     }
 
+#if DEBUG
     public static bool IsPooled<T>(T value)
       where T : class, IPoolable<T>, new()
     {
       NodeList<T> list = value.List;
       return (list != null) && list.isPoolList;
     }
+#endif
   }
 
-  public class Pool<T>
+  public sealed class Pool<T>
     where T : class, IPoolable<T>, new()
   {
-    private NodeList<T> freeList;
+    internal NodeList<T> freeList;
 
     public Pool()
     {
       this.freeList = new NodeList<T>();
+#if DEBUG
       this.freeList.isPoolList = true;
+#endif
     }
 
     public T Allocate()
@@ -82,7 +89,11 @@ namespace Reservoir
 
     internal void Deallocate(T value)
     {
+#if DEBUG
       if ((value.Pool != this) || Pool.IsPooled(value))
+#else
+      if (value.Pool != this)
+#endif
         throw new AccessViolationException();
 
       value.Reset();

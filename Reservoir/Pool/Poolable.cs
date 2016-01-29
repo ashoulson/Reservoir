@@ -35,7 +35,6 @@ namespace Reservoir
   {
     T INode<T>.Next { get; set; }
     T INode<T>.Previous { get; set; }
-    NodeList<T> INode<T>.List { get; set; }
     Pool<T> IPoolable<T>.Pool { get; set; }
     void IPoolable<T>.Initialize() { this.Initialize(); }
     void IPoolable<T>.Reset() { this.Reset(); }
@@ -47,5 +46,9 @@ namespace Reservoir
     protected virtual void Reset()
     {
     }
+
+#if DEBUG
+    NodeList<T> INode<T>.List { get; set; }
+#endif
   }
 }

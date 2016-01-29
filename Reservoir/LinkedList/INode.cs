@@ -29,6 +29,9 @@ namespace Reservoir
   {
     T Next { get; set; }
     T Previous { get; set; }
+
+#if DEBUG
     NodeList<T> List { get; set; }
+#endif
   }
 }
